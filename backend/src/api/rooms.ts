@@ -4,9 +4,12 @@ import {
   HttpError,
   joinRoomSchema,
   roomCodeParamsSchema,
-  roomViewerQuerySchema
+  roomViewerQuerySchema,
+  startSchema,
+  guessSchema,
+  restartSchema
 } from "./schemas.js";
-import { createRoom, getRoom, joinRoom, toRoomSnapshot } from "../services/roomStore.js";
+import { createRoom, getRoom, joinRoom, toRoomSnapshot, startRound, submitGuess, restartRound } from "../services/roomStore.js";
 
 export function createRoomsRouter() {
   const router = Router();
@@ -57,6 +60,45 @@ export function createRoomsRouter() {
       response.json({
         room: toRoomSnapshot(room, participantId)
       });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.post("/:code/start", (request, response, next) => {
+    try {
+      const { code } = roomCodeParamsSchema.parse(request.params);
+      const { participantId } = startSchema.parse(request.body);
+
+      const room = startRound(code.toUpperCase(), participantId);
+
+      response.json({ room: toRoomSnapshot(room, participantId) });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.post("/:code/guess", (request, response, next) => {
+    try {
+      const { code } = roomCodeParamsSchema.parse(request.params);
+      const { participantId, guess } = guessSchema.parse(request.body);
+
+      const room = submitGuess(code.toUpperCase(), participantId, guess);
+
+      response.json({ room: toRoomSnapshot(room, participantId) });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.post("/:code/restart", (request, response, next) => {
+    try {
+      const { code } = roomCodeParamsSchema.parse(request.params);
+      const { participantId } = restartSchema.parse(request.body);
+
+      const room = restartRound(code.toUpperCase(), participantId);
+
+      response.json({ room: toRoomSnapshot(room, participantId) });
     } catch (error) {
       next(error);
     }

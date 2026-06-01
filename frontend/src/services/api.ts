@@ -8,10 +8,26 @@ export interface Participant {
 
 export interface RoomSnapshot {
   code: string;
-  status: "lobby";
-  participants: Participant[];
+  status: "lobby" | "active" | "results";
+  hostId: string;
+  participants: (Participant & { score?: number; role?: ParticipantRole })[];
   availableWords: string[];
   roles: ParticipantRole[];
+  round?: {
+    drawerId?: string;
+    secretWord?: string;
+    startedAt?: string;
+    endedAt?: string | null;
+    status?: "active" | "finished";
+  } | null;
+  guesses?: {
+    id: string;
+    participantId: string;
+    text: string;
+    normalizedText: string;
+    correct: boolean;
+    createdAt: string;
+  }[];
 }
 
 export interface RoomSessionResponse {
@@ -57,5 +73,26 @@ export const api = {
   fetchRoom(code: string, participantId?: string) {
     const query = participantId ? `?participantId=${encodeURIComponent(participantId)}` : "";
     return request<{ room: RoomSnapshot }>(`/rooms/${encodeURIComponent(code)}${query}`);
+  }
+};
+
+export const serverActions = {
+  startGame(code: string, participantId: string) {
+    return request<{ room: RoomSnapshot }>(`/rooms/${encodeURIComponent(code)}/start`, {
+      method: "POST",
+      body: JSON.stringify({ participantId })
+    });
+  },
+  submitGuess(code: string, participantId: string, guess: string) {
+    return request<{ room: RoomSnapshot }>(`/rooms/${encodeURIComponent(code)}/guess`, {
+      method: "POST",
+      body: JSON.stringify({ participantId, guess })
+    });
+  },
+  restartRoom(code: string, participantId: string) {
+    return request<{ room: RoomSnapshot }>(`/rooms/${encodeURIComponent(code)}/restart`, {
+      method: "POST",
+      body: JSON.stringify({ participantId })
+    });
   }
 };

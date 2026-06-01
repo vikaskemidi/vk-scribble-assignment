@@ -14,7 +14,13 @@ export function CreateRoomPage() {
 
     try {
       setError(null);
-      await roomStore.createRoom(playerName);
+      const name = playerName.trim();
+      if (name.length === 0) {
+        setError("Player name cannot be empty");
+        return;
+      }
+
+      await roomStore.createRoom(name);
       navigate("/lobby");
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "Unable to create room");

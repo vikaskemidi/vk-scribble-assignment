@@ -15,7 +15,20 @@ export function JoinRoomPage() {
 
     try {
       setError(null);
-      await roomStore.joinRoom(roomCode.toUpperCase(), playerName);
+      const name = playerName.trim();
+      const code = roomCode.trim().toUpperCase();
+
+      if (name.length === 0) {
+        setError("Player name cannot be empty");
+        return;
+      }
+
+      if (code.length !== 4) {
+        setError("Room code must be 4 characters");
+        return;
+      }
+
+      await roomStore.joinRoom(code, name);
       navigate("/lobby");
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "Unable to join room");
