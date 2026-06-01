@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import type { Participant, Room, RoomSnapshot } from "../models/game.js";
+import type { Participant, Room, RoomSnapshot, Round } from "../models/game.js";
 import { STARTER_ROLES, STARTER_WORDS } from "../seed/starterData.js";
 
 const rooms = new Map<string, Room>();
@@ -157,7 +157,7 @@ export function startRound(code: string, participantId: string) {
   const wordIndex = sum % STARTER_WORDS.length;
   const secretWord = STARTER_WORDS[wordIndex];
 
-  const round = {
+  const round: Round = {
     drawerId: drawer.id,
     secretWord,
     startedAt: now(),

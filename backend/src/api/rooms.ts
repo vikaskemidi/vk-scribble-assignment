@@ -72,6 +72,10 @@ export function createRoomsRouter() {
 
       const room = startRound(code.toUpperCase(), participantId);
 
+      if (!room) {
+        throw new HttpError(404, "Unable to start room");
+      }
+
       response.json({ room: toRoomSnapshot(room, participantId) });
     } catch (error) {
       next(error);
@@ -85,6 +89,10 @@ export function createRoomsRouter() {
 
       const room = submitGuess(code.toUpperCase(), participantId, guess);
 
+      if (!room) {
+        throw new HttpError(404, "Unable to submit guess");
+      }
+
       response.json({ room: toRoomSnapshot(room, participantId) });
     } catch (error) {
       next(error);
@@ -97,6 +105,10 @@ export function createRoomsRouter() {
       const { participantId } = restartSchema.parse(request.body);
 
       const room = restartRound(code.toUpperCase(), participantId);
+
+      if (!room) {
+        throw new HttpError(404, "Unable to restart room");
+      }
 
       response.json({ room: toRoomSnapshot(room, participantId) });
     } catch (error) {
