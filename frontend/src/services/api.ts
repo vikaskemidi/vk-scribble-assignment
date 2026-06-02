@@ -28,6 +28,13 @@ export interface RoomSnapshot {
     correct: boolean;
     createdAt: string;
   }[];
+  strokes?: {
+    id: string;
+    participantId: string;
+    points: { x: number; y: number }[];
+    color?: string;
+    createdAt: string;
+  }[];
 }
 
 export interface RoomSessionResponse {

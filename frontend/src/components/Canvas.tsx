@@ -15,6 +15,7 @@ export function Canvas() {
     if (!ctx) return;
 
     function resize() {
+      if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
       canvas.width = rect.width;
       canvas.height = rect.height;
@@ -22,14 +23,14 @@ export function Canvas() {
     }
 
     function redraw() {
-      if (!ctx) return;
+      if (!ctx || !canvas) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       // draw strokes from room
-      (room?.strokes ?? []).forEach((s) => {
+      (room?.strokes ?? []).forEach((s: { points: { x: number; y: number }[]; color?: string }) => {
         ctx.beginPath();
-        s.points.forEach((p: any, i: number) => {
-          const x = p.x * canvas.width;
-          const y = p.y * canvas.height;
+        s.points.forEach((p, i: number) => {
+          const x = p.x * canvas!.width;
+          const y = p.y * canvas!.height;
           if (i === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         });
@@ -51,7 +52,9 @@ export function Canvas() {
     if (!canvas) return;
 
     function getPos(evt: MouseEvent | TouchEvent) {
-      const rect = canvas.getBoundingClientRect();
+      const cvs = canvasRef.current;
+      if (!cvs) return { x: 0, y: 0 };
+      const rect = cvs.getBoundingClientRect();
       if (evt instanceof TouchEvent) {
         const t = evt.touches[0];
         return { x: (t.clientX - rect.left) / rect.width, y: (t.clientY - rect.top) / rect.height };
@@ -75,17 +78,17 @@ export function Canvas() {
       const p = getPos(e);
       pointsRef.current.push(p);
       // draw immediate
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
+      const cvs = canvasRef.current;
+      if (!cvs) return;
+      const ctx = cvs.getContext("2d");
       if (!ctx) return;
       const pts = pointsRef.current;
       const last = pts[pts.length - 1];
       const prev = pts[pts.length - 2];
       if (!prev) return;
       ctx.beginPath();
-      ctx.moveTo(prev.x * canvas.width, prev.y * canvas.height);
-      ctx.lineTo(last.x * canvas.width, last.y * canvas.height);
+      ctx.moveTo(prev.x * cvs.width, prev.y * cvs.height);
+      ctx.lineTo(last.x * cvs.width, last.y * cvs.height);
       ctx.strokeStyle = "#111827";
       ctx.lineWidth = 2;
       ctx.lineJoin = "round";
