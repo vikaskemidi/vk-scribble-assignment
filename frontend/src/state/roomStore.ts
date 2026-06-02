@@ -89,6 +89,10 @@ class RoomStore {
     return response;
   }
 
+  leaveRoom() {
+    this.setState({ room: null, participantId: null, error: null });
+  }
+
   async fetchRoom() {
     if (!this.state.room) {
       return null;
@@ -102,6 +106,13 @@ class RoomStore {
   async startGame() {
     if (!this.state.room || !this.state.participantId) return null;
     const response = await serverActions.startGame(this.state.room.code, this.state.participantId);
+    this.setRoomSnapshot(response.room);
+    return response.room;
+  }
+
+  async addStroke(points: { x: number; y: number }[]) {
+    if (!this.state.room || !this.state.participantId) return null;
+    const response = await serverActions.addStroke(this.state.room.code, this.state.participantId, points);
     this.setRoomSnapshot(response.room);
     return response.room;
   }

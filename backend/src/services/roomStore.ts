@@ -60,6 +60,7 @@ export function createRoom(playerName?: string) {
     participants: [participant],
     round: null,
     guesses: [],
+    strokes: [],
     createdAt: now(),
     updatedAt: now()
   };
@@ -81,6 +82,8 @@ export function joinRoom(code: string, playerName?: string) {
 
   const participant = createParticipant(playerName);
   room.participants.push(participant);
+  room.updatedAt = now();
+  rooms.set(room.code, room);
   room.updatedAt = now();
   rooms.set(room.code, room);
 
@@ -124,6 +127,7 @@ export function toRoomSnapshot(room: Room, viewerParticipantId?: string): RoomSn
     }
 
     snapshot.guesses = room.guesses.map((g) => ({ ...g }));
+    snapshot.strokes = room.strokes.map((s) => ({ ...s }));
   }
 
   return snapshot;
@@ -170,6 +174,7 @@ export function startRound(code: string, participantId: string) {
 
   room.round = round;
   room.guesses = [];
+  room.strokes = [];
   room.status = "active";
   room.participants = room.participants.map((p) => ({ ...p, role: p.id === drawer.id ? "drawer" : "guesser" }));
 
@@ -235,6 +240,24 @@ export function submitGuess(code: string, participantId: string, guessText: stri
   return cloneRoom(room);
 }
 
+export function addStroke(code: string, participantId: string, points: { x: number; y: number }[], color?: string) {
+  const room = rooms.get(code);
+  if (!room) return null;
+
+  const stroke = {
+    id: randomUUID(),
+    participantId,
+    points: points.map((p) => ({ x: p.x, y: p.y })),
+    color,
+    createdAt: now()
+  };
+
+  room.strokes.push(stroke);
+  rooms.set(room.code, room);
+
+  return cloneRoom(room);
+}
+
 export function restartRound(code: string, participantId: string) {
   const room = rooms.get(code);
   if (!room) return null;
@@ -253,6 +276,7 @@ export function restartRound(code: string, participantId: string) {
 
   room.round = null;
   room.guesses = [];
+  room.strokes = [];
   room.status = "lobby";
   room.participants = room.participants.map((p) => ({ ...p, role: undefined }));
 

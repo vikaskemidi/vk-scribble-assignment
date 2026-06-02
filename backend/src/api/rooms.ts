@@ -8,8 +8,9 @@ import {
   startSchema,
   guessSchema,
   restartSchema
+  , strokeSchema
 } from "./schemas.js";
-import { createRoom, getRoom, joinRoom, toRoomSnapshot, startRound, submitGuess, restartRound } from "../services/roomStore.js";
+import { createRoom, getRoom, joinRoom, toRoomSnapshot, startRound, submitGuess, restartRound, addStroke } from "../services/roomStore.js";
 
 export function createRoomsRouter() {
   const router = Router();
@@ -91,6 +92,23 @@ export function createRoomsRouter() {
 
       if (!room) {
         throw new HttpError(404, "Unable to submit guess");
+      }
+
+      response.json({ room: toRoomSnapshot(room, participantId) });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.post("/:code/draw", (request, response, next) => {
+    try {
+      const { code } = roomCodeParamsSchema.parse(request.params);
+      const { participantId, points, color } = strokeSchema.parse(request.body);
+
+      const room = addStroke(code.toUpperCase(), participantId, points, color);
+
+      if (!room) {
+        throw new HttpError(404, "Unable to add stroke");
       }
 
       response.json({ room: toRoomSnapshot(room, participantId) });

@@ -26,6 +26,19 @@ export interface Guess {
   createdAt: string;
 }
 
+export interface StrokePoint {
+  x: number;
+  y: number;
+}
+
+export interface Stroke {
+  id: string;
+  participantId: string;
+  points: StrokePoint[];
+  color?: string;
+  createdAt: string;
+}
+
 export interface Room {
   code: string;
   status: RoomStatus;
@@ -33,6 +46,7 @@ export interface Room {
   participants: Participant[];
   round: Round | null;
   guesses: Guess[];
+  strokes: Stroke[];
   createdAt: string;
   updatedAt: string;
   availableWords?: string[];
@@ -47,6 +61,7 @@ export interface RoomSnapshot {
   roles: ParticipantRole[];
   round?: Partial<Round> | null;
   guesses?: Guess[];
+  strokes?: Stroke[];
 }
 
 export interface RoomSessionResponse {

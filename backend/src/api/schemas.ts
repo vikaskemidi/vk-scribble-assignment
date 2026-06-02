@@ -34,6 +34,17 @@ export const restartSchema = z.object({
   participantId: z.string()
 });
 
+export const strokePointSchema = z.object({
+  x: z.number(),
+  y: z.number()
+});
+
+export const strokeSchema = z.object({
+  participantId: z.string(),
+  points: z.array(strokePointSchema),
+  color: z.string().optional()
+});
+
 export class HttpError extends Error {
   statusCode: number;
 

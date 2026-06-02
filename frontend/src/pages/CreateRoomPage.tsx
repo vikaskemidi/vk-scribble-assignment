@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "../components/PageHeader";
 import { useRoomStore } from "../state/roomStore";
@@ -8,6 +8,10 @@ export function CreateRoomPage() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const roomStore = useRoomStore();
+
+  useEffect(() => {
+    roomStore.leaveRoom();
+  }, [roomStore]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

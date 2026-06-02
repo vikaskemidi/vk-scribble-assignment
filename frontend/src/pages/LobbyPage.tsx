@@ -17,6 +17,12 @@ export function LobbyPage() {
     }
   }, [navigate, room]);
 
+  useEffect(() => {
+    if (room?.status === "active" || room?.status === "results") {
+      navigate("/game");
+    }
+  }, [navigate, room]);
+
   async function handleRefresh() {
     try {
       setRefreshError(null);

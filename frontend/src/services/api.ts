@@ -95,4 +95,11 @@ export const serverActions = {
       body: JSON.stringify({ participantId })
     });
   }
+  ,
+  addStroke(code: string, participantId: string, points: { x: number; y: number }[], color?: string) {
+    return request<{ room: RoomSnapshot }>(`/rooms/${encodeURIComponent(code)}/draw`, {
+      method: "POST",
+      body: JSON.stringify({ participantId, points, color })
+    });
+  }
 };
