@@ -27,26 +27,33 @@ describe("roomStore", () => {
 
     // Start round as host
     const started = startRound(code, hostId);
-    expect(started).toBeDefined();
-    expect(started.status).toBe("active");
-    expect(started.round).toBeDefined();
+    expect(started).not.toBeNull();
+    const startedRoom = started!;
+    expect(startedRoom.status).toBe("active");
+    expect(startedRoom.round).toBeDefined();
 
     // Find a guesser id
-    const guesser = started.participants.find((p: any) => p.id !== started.round.drawerId);
-    expect(guesser).toBeDefined();
+    const guesser = startedRoom.participants.find((p: any) => p.id !== startedRoom.round?.drawerId);
+    expect(guesser).not.toBeNull();
+    const guesserId = guesser!.id;
 
     // Submit a correct guess
-    const secret = started.round.secretWord;
-    const afterGuess = submitGuess(code, guesser.id, secret);
-    expect(afterGuess.status).toBe("results");
-    const updatedGuesser = afterGuess.participants.find((p: any) => p.id === guesser.id);
-    expect(updatedGuesser.score).toBeGreaterThanOrEqual(100);
+    const secret = startedRoom.round!.secretWord;
+    const afterGuess = submitGuess(code, guesserId, secret);
+    expect(afterGuess).not.toBeNull();
+    const afterGuessRoom = afterGuess!;
+    expect(afterGuessRoom.status).toBe("results");
+    const updatedGuesser = afterGuessRoom.participants.find((p: any) => p.id === guesserId);
+    expect(updatedGuesser).not.toBeNull();
+    expect(updatedGuesser!.score).toBeGreaterThanOrEqual(100);
 
     // Restart as host
     const restarted = restartRound(code, hostId);
-    expect(restarted.status).toBe("lobby");
-    expect(restarted.round).toBeNull();
-    expect(restarted.guesses).toHaveLength(0);
-    restarted.participants.forEach((p: any) => expect(p.role).toBeUndefined());
+    expect(restarted).not.toBeNull();
+    const restartedRoom = restarted!;
+    expect(restartedRoom.status).toBe("lobby");
+    expect(restartedRoom.round).toBeNull();
+    expect(restartedRoom.guesses).toHaveLength(0);
+    restartedRoom.participants.forEach((p: any) => expect(p.role).toBeUndefined());
   });
 });
