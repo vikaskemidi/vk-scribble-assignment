@@ -6,7 +6,7 @@
 
 - [x] T001 Create task list and plan for gameplay feature — specs/001-gameplay-flow/plan.md
 - [x] T002 Install project dependencies (backend/frontend) — run in repo root: `npm install` in `backend/` and `frontend/`
-- [ ] T003 [P] Configure linting and formatting (prettier/eslint) — .eslintrc / package.json
+- [x] T003 [P] Configure linting and formatting (prettier/eslint) — .eslintrc / package.json
 
 ---
 
@@ -61,9 +61,9 @@ Independent Test: Start round, drawer sees word, guessers do not, trimmed guesse
 
 Goal: Show results with scores and allow host to restart a round.
 
-- [ ] T019 [US4] Add scoring (100 points on correct guess) and result transition — backend/src/services/roomStore.ts
-- [ ] T020 [US4] Implement restart endpoint and UI (host-only) — backend/src/api/rooms.ts, frontend/src/pages/GamePage.tsx or ResultPanel
-- [ ] T021 [US4] Ensure scoreboard displays cumulative scores — frontend/src/components/Scoreboard.tsx
+ - [x] T019 [US4] Add scoring (100 points on correct guess) and result transition — backend/src/services/roomStore.ts
+ - [x] T020 [US4] Implement restart endpoint and UI (host-only) — backend/src/api/rooms.ts, frontend/src/pages/GamePage.tsx or ResultPanel
+ - [x] T021 [US4] Ensure scoreboard displays cumulative scores — frontend/src/components/Scoreboard.tsx
 
 Independent Test: Complete a round, verify results show correct word and scores; host restarts and returns to lobby.
 
@@ -71,7 +71,7 @@ Independent Test: Complete a round, verify results show correct word and scores;
 
 ## Phase 7: Tests & Verification
 
-- [ ] T022 Add backend Vitest unit/integration tests for `startRound`, `submitGuess`, and `restartRound` — backend/src/services/roomStore.test.ts
+ - [x] T022 Add backend Vitest unit/integration tests for `startRound`, `submitGuess`, and `restartRound` — backend/src/services/roomStore.test.ts
 - [ ] T023 Add frontend tests (optional) for polling and GuessForm behavior — frontend/src/services/api.test.ts, frontend/src/components/GuessForm.test.tsx
 - [x] T024 Manual smoke verification performed (create → join → start → guess → results → restart)
 
@@ -79,7 +79,7 @@ Independent Test: Complete a round, verify results show correct word and scores;
 
 ## Phase 8: Polish & Cross-Cutting Concerns
 
-- [ ] T025 Documentation: update `specs/001-gameplay-flow/quickstart.md` with manual verification steps
+- [x] T025 Documentation: update `specs/001-gameplay-flow/quickstart.md` with manual verification steps
 - [ ] T026 Code cleanup and small refactors (types, naming) — across `backend/src` and `frontend/src`
 - [ ] T027 Run linting and fix issues — repo root lint scripts
 

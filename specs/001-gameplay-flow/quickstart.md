@@ -59,6 +59,9 @@ npm run dev
 - Submit a guess from a guesser tab and confirm it appears in all tabs.
 - End the round, verify the result view, and restart to return to the lobby.
 
+- After a correct guess, verify the guesser receives points (100) and the scoreboard reflects cumulative scores.
+- As the host, use the Restart action in the results panel to return to the lobby and begin a new round.
+
 ## Notes
 
 - If the backend is running on a non-default address, set `VITE_API_URL` in `frontend/.env` or your shell before launching the frontend.

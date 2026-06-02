@@ -112,8 +112,11 @@ export function toRoomSnapshot(room: Room, viewerParticipantId?: string): RoomSn
   };
 
   if (room.round) {
-    // Only include the secretWord for the drawer (viewer)
-    if (viewerParticipantId && room.round.drawerId === viewerParticipantId) {
+    // Include the secretWord for the drawer, and also reveal it
+    // to all viewers once the round has finished (results phase).
+    if (room.round.status === "finished") {
+      snapshot.round = { ...room.round };
+    } else if (viewerParticipantId && room.round.drawerId === viewerParticipantId) {
       snapshot.round = { ...room.round };
     } else {
       const { secretWord, ...rest } = room.round as any;
